@@ -1,0 +1,60 @@
+.cidade {
+    cursor: pointer;
+    width: 200px;
+    font-weight: 500;
+    word-wrap: break-word;
+}
+
+.cidade:hover {
+    transform: scale(1.1);
+    transition: 0.4s;
+ }
+
+ .cidade{
+    height: 200px;
+    width: 200px;
+    text-align: center;
+    font-size: 1.5vw;
+    color: white;
+    font-weight: 700;
+ }
+
+ #nara {
+    background-image: url(../assets/imgs/naradeer.jpg);
+    background-size: cover;
+    background-position: center;
+ }
+
+#koyasan {
+    background-image: url(../assets/imgs/koyafogoritual.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+#mtfuji {
+    background-image: url(../assets/imgs/fuji.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+#hiroshima {
+    background-image: url(../assets/imgs/hiroshimabanner.webp);
+    background-size: cover;
+    background-position: center;
+}
+
+#kyoto {
+    background-image: url(../assets/imgs/kyoto.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.botao_votar {
+    display: flex;
+    flex-direction: row;
+    gap: 3vw;
+    /* width: 100%; */
+    justify-content: center;
+    align-items: center;
+    margin-left: 375px;
+}

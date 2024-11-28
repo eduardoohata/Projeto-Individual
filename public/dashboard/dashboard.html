@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <link rel="shortcut icon" href="../assets/icon/favicon2.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conhecendo o Mundo | Dashboards</title>
+
+    
+    <link rel="stylesheet" href="./../css/dashboards.css">
+    <link rel="stylesheet" href="./../css/estilo.css" />
+    <link rel="stylesheet" href="./../css/leader.css">
+    <script src="../js/sessao.js"></script>
+    <script src="./../js/alerta.js"></script>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- scripts do Chart.js - 2022-1 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!--FONT AWESOME-->
+    <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
+</head>
+
+<!-- <body onload=" atualizarFeed()"> -->
+
+<body onload="buscarKpi(), buscarResultadosPorUsuario()">
+
+
+  
+
+
+    <div class="janela">
+        <div class="header-left">
+            <img class="head-logo" src="../assets/imgs/kitsunemask.png">
+           <a href="../index.html"><b><h1>Conhecendo o Mundo</h1></b></a>
+
+            <div class="hello">
+                <h3>Olá, <span id="b_usuario">usuário</span>!</h3>
+            </div>
+
+            <div class="btn-nav-white">
+                <a href="./quiz.html">
+                    <h3>Quiz</h3>
+                </a>
+            </div>
+
+            <div class="btn-nav">
+
+                <h3>Gráficos</h3>
+
+            </div>
+
+            <div class="btn-nav-white">
+                <a href="./votocao.html">
+                    <h3>Votação</h3>
+                </a>
+            </div>
+
+            <div class="btn-logout" onclick="limparSessao()">
+                <h3>Sair</h3>
+            </div>
+
+        </div>
+
+        <div class="dashboard">
+            <div class="kpi-pai">
+
+                <div class="div-kpi div-acerto">
+                    <span>Quantidade de Acerto</span>
+                    <span id="span_qtdAcerto">2</span>
+                </div>
+                <div class="div-kpi div-erro">
+                    <span>Quantidade de erro</span>
+                    <span id="span_qtdErro">2</span>
+                </div>
+                <div class="div-kpi div-jogada">
+                    <span>Quantidade de vezes jogadas</span>
+                    <span id="span_qtdJogada">1</span>
+                </div>
+            </div>
+            <div id="graficos">
+                <canvas id="grafico_pizza" class="grafico"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="leaderboard">
+        <h1>Leaderboard</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Posição</th>
+                    <th>Nome</th>
+                    <th>Pontos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Jogador 1</td>
+                    <td>1500</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Jogador 2</td>
+                    <td>1400</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Jogador 3</td>
+                    <td>1300</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Jogador 4</td>
+                    <td>1200</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Jogador 5</td>
+                    <td>1100</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>
+
+<script>
+    b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
+
+
+    const ctx = document.getElementById('grafico_pizza');
+    
+    var graficoLinha = new Chart(ctx, {
+
+    type: 'bar',
+    data: {
+        
+        datasets: [{
+        label: 'Quantidade de Acertos',
+        data: [],
+        borderWidth: 1
+
+        },{
+        label: 'Quantidade de Erros',
+        data: [],
+        borderWidth: 1
+
+        }]
+    },
+
+    options: {
+        plugins: {
+            legend: {
+                labels: {
+                    font: {
+                        weight: '800', // Torna o texto da legenda em negrito
+                        size: '20vw'
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Data e hora', // Título do eixo X
+                    font: {
+                        weight: 'bold', // Negrito no título do eixo X
+                        size: '20vw'
+                    }
+                }
+            },
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+    });
+
+   function buscarResultadosPorUsuario() {
+        var idUsuario = sessionStorage.ID_USUARIO;
+
+        fetch(`/quiz/buscar/${idUsuario}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+            
+        }).then(function (resposta) {
+            console.log("ESTOU NO THEN DO cadastrarPontos()!")
+
+            if (resposta.ok) {
+// data vem no formato ISO london // T time 000z zona londres / criando nova data new date
+// troca para pt be zona america sao paulo / put vem formato gmt br
+                resposta.json().then(valores => {
+                    console.log(valores)
+                    valores.forEach((valor)=>{
+                        if (graficoLinha.data.labels.lenght == 10 && graficoLinha.data.datasets[0].data.lennght == 10){
+                            graficoLinha.data.labels.shift();
+                            graficoLinha.data.datasets[0].data.shift();
+                        }
+
+                        var data_hora = new Date(valor.dt_hora);
+                        var data_horaBR = data_hora.toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"});
+                        graficoLinha.data.labels.push(data_horaBR);
+                        graficoLinha.data.datasets[0].data.push(parseFloat(valor.qtd_acertos));
+                        graficoLinha.data.datasets[1].data.push(parseFloat(valor.qtd_erros));
+                        graficoLinha.update();
+                    }); 
+                    
+                
+                });
+
+            } else {
+
+                console.log("Houve um erro ao trazer dados do Banco");
+
+                resposta.text().then(texto => {
+                    console.error(texto);
+                    finalizarAguardar(texto);
+                });
+            }
+
+        }).catch(function (erro) {
+            console.log(erro);
+        })
+
+        return false;
+    }
+
+    function buscarKpi() {
+        var idUsuario = sessionStorage.ID_USUARIO;
+
+        fetch(`/quiz/buscarKpis/${idUsuario}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+            
+        }).then(function (resposta) {
+            console.log("ESTOU NO THEN DO buscarKpis()!")
+
+            if (resposta.ok) {
+                console.log(resposta);
+
+                resposta.json().then(json => {
+                    console.log(json);
+                span_qtdAcerto.innerHTML = json[0].QuantidadeDeAcertos
+                span_qtdErro.innerHTML = json[0].QuantidaDeErros
+                span_qtdJogada.innerHTML = json[0].QuantidadeDeJogadas
+                });
+
+            } else {
+
+                console.log("Houve um erro ao trazer Kpis");
+
+                resposta.text().then(texto => {
+                    console.error(texto);
+                    finalizarAguardar(texto);
+                });
+            }
+
+        }).catch(function (erro) {
+            console.log(erro);
+        })
+
+        return false;
+    }
+</script>
