@@ -80,7 +80,7 @@ font-weight: 800;
 .banner {
   height: var(--tamanho-banner);
   color: white;
-  background-image: url('../assets/imgs/grid.png');
+  background-image: url('../assets/imgs/bannersemfundo.png');
   background-size: cover;
   background-position: center;
   background-size: contain;

@@ -31,6 +31,26 @@ CREATE TABLE quiz (
     FOREIGN KEY (fk_usuario) REFERENCES usuario (id_usuario)
 );
 
+CREATE TABLE voto (
+fk_usuario INT primary key,
+cidade varchar(45),
+FOREIGN KEY (fk_usuario) REFERENCES usuario (id_usuario)
+);
+select * from voto;
+
+SELECT COUNT(cidade) FROM voto where cidade = 'Nara';
+
+SELECT
+	(SELECT COUNT(cidade) FROM voto where cidade = 'nara') AS nara,
+    (SELECT COUNT(cidade) FROM voto where cidade = 'koyasan') AS koyasan,
+    (SELECT COUNT(cidade) FROM voto where cidade = 'mtfuji') AS mtfuji,
+    (SELECT COUNT(cidade) FROM voto where cidade = 'hiroshima') AS hiroshima,
+    (SELECT COUNT(cidade) FROM voto where cidade = 'kyoto') AS kyoto
+	FROM voto;
+
+desc voto;
+
+alter table quiz add column tempofinal varchar(45);
 
 select * from usuario;
 
@@ -65,3 +85,4 @@ CREATE TABLE aviso (
 	fk_usuario INT,
 	FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario)
 );
+desc quiz;

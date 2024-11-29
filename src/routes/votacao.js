@@ -8,7 +8,11 @@ router.post("/votar/", function (req, res) {
     votacaoController.votar(req, res);
 })
 router.get("/ultimos", function (req, res) {
-    votoController.obterVotosAtualizados(req, res); // invoca a função da controller para "obter os votos atualizados"
+    votacaoController.obterVotosAtualizados(req, res); // invoca a função da controller para "obter os votos atualizados"
+});
+
+router.get("/verifica/:fk_usuario", function (req, res) {
+    votacaoController.verificarVoto(req, res);
 });
 
 module.exports = router;

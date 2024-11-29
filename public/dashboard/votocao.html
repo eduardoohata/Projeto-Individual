@@ -18,9 +18,11 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body style="background-color: #161618;">
+<body style="background-color: #161618;" onload='obterDadosGrafico()'>
 
     <div class="janela">
 
@@ -63,31 +65,52 @@
             <button id="kyoto" class="cidade" onclick="votar('kyoto')">VOTAR!</button>
         </div>
 
+        <div id="graficos">
+            <canvas id="grafico_barra" class="grafico"></canvas>
+        </div>
+
 </body>
 
 </html>
 
 <script>
+    var podeVotar = true;
+    verificarVoto()
+    const ctx = document.getElementById('grafico_barra');
+
     var myChart;
-    function votar(cidade) {
+
+    //   fetch('rota/get')
+    //   .then(function (resposta) {
+    //     resposta.json()
+    //     .then(function (respostaJSON) {
+    //         if (respostaJson JÁ VOTOU) {
+    //             votar()
+    //         }
+    //     })
+    //   })
+
+
+    function verificarVoto() {
         var fk_usuario = sessionStorage.ID_USUARIO;
 
         console.log(fk_usuario);
 
-        fetch(`/votacao/votar`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                cidadeServer: cidade,
-                fk_usuarioServer: fk_usuario
-            })
+        fetch(`/votacao/verifica/${fk_usuario}`, {
+            method: "GET",
         })
             .then((response) => {
                 if (response.ok) {
-                    console.log(`Voto contabilizado`);
-                    //   atualizarGrafico();
+                    if (response.status == 200) {
+                        podeVotar = false;
+                        console.log(document.getElementsByClassName('cidade'))
+                        var htmls = document.getElementsByClassName('cidade')
+                        var tamanho_lista = htmls.length
+                        for (var i = 0; i < tamanho_lista; i++) {
+                            htmls[i].style.filter = 'grayscale(100%)';
+                        }
+                    }
+                    atualizarGrafico();
                 } else {
                     console.error("Erro na votação ou jogo não encontrado");
                 }
@@ -96,134 +119,171 @@
                 console.error(`Erro ao realizar o voto: ${error.message}`);
             });
     }
-function obterDadosGrafico() {
-    fetch(`/votacao/ultimos`, { cache: "no-store" })
-      .then(function (response) {
-        if (response.ok) {
-          response.json().then(function (resposta) {
-            console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
 
-            plotarGrafico(resposta);
-          });
+    function votar(cidade) {
+        var fk_usuario = sessionStorage.ID_USUARIO;
+
+        console.log(fk_usuario);
+
+        if (podeVotar) {
+            fetch(`/votacao/votar`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    cidadeServer: cidade,
+                    fk_usuarioServer: fk_usuario
+                })
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        console.log(`Voto contabilizado`);
+                        atualizarGrafico();
+                        verificarVoto();
+                    } else {
+                        console.error("Erro na votação ou jogo não encontrado");
+                    }
+                })
+                .catch(function (error) {
+                    console.error(`Erro ao realizar o voto: ${error.message}`);
+                });
         } else {
-          console.error("Nenhum dado encontrado ou erro na API");
+            alert('Você já votou!')
         }
-      })
-      .catch(function (error) {
-        console.error(
-          `Erro na obtenção dos dados p/ gráfico: ${error.message}`
-        );
-      });
-  }
-
-  
-  function plotarGrafico(resposta) {
-    console.log("iniciando plotagem do gráfico...");
-
-    // Criando estrutura para plotar gráfico - labels
-    let labels = [
-      "Hiroshima",
-      "Koyasan",
-      "Kyoto",
-      "Mt. Fuji",
-      "Nara",
-    ];
-
-    // Criando estrutura para plotar gráfico - dados
-    let dados = {
-      labels: labels,
-      datasets: [
-        {
-          label: "Votos",
-          data: [],
-          fill: false,
-          backgroundColor: [
-            "rgba(75, 192, 192, 0.2)",
-            "rgba(255, 99, 132, 0.2)",
-            "rgba(54, 162, 235, 0.2)",
-          ],
-          borderColor: [
-            "rgba(75, 192, 192, 1)",
-            "rgba(255, 99, 132, 1)",
-            "rgba(54, 162, 235, 1)",
-          ],
-          borderWidth: 1,
-          tension: 0.1,
-        },
-      ],
-    };
-
-    console.log("----------------------------------------------");
-    console.log(
-      'Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":'
-    );
-    console.log(resposta);
-
-    // Inserindo valores recebidos em estrutura para plotar o gráfico
-
-    for (i = 0; i < resposta.length; i++) {
-      var registro = resposta[i];
-      dados.datasets[0].data.push(registro.quantidade);
     }
-    const config = {
-      type: "bar",
-      data: dados,
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
-        plugins: {
-          title: {
-            display: true,
-            text: "VOTAÇÃO",
-            color: "#FFFFFF",
-            font: {
-              size: 20,
-            },
-          },
-          legend: {
-            display: true,
-            labels: {
-              color: "white",
-            },
-          },
-        },
-      },
-    };
 
-    // Adicionando gráfico criado em div na tela
-    myChart = new Chart(document.getElementById("myCanvas"), config);
-  }
+    function obterDadosGrafico() {
+        fetch(`/votacao/ultimos`, { cache: "no-store" })
+            .then(function (response) {
+                if (response.ok) {
+                    response.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
 
-  function atualizarGrafico() {
-    fetch(`/votos/ultimos`, { cache: "no-store" })
-      .then(function (resposta) {
-        if (resposta.ok) {
-          resposta.json().then(function (respostaJSON) {
-            console.log(`Dados recebidos: ${JSON.stringify(respostaJSON)}`);
-            console.log(`Dados atuais do gráfico:`);
-            console.log(myChart.data);
+                        plotarGrafico(resposta);
+                    });
+                } else {
+                    console.error("Nenhum dado encontrado ou erro na API");
+                }
+            })
+            .catch(function (error) {
+                console.error(
+                    `Erro na obtenção dos dados p/ gráfico: ${error.message}`
+                );
+            });
+    }
 
-            myChart.data.datasets[0].data = [];
 
-            for (let i = 0; i < respostaJSON.length; i++) {
-              myChart.data.datasets[0].data.push(respostaJSON[i].quantidade);
-            }
-          
-            myChart.update();
-          });
-        } else {
-          console.error("Nenhum dado encontrado ou erro na API");
-        }
-      })
-      .catch(function (error) {
-        console.error(
-          `Erro na obtenção dos dados p/ gráfico: ${error.message}`
+    function plotarGrafico(resposta) {
+        console.log("iniciando plotagem do gráfico...");
+
+        // Criando estrutura para plotar gráfico - labels
+        let labels = [
+            "Hiroshima",
+            "Koyasan",
+            "Kyoto",
+            "Mt. Fuji",
+            "Nara",
+        ];
+
+        // Criando estrutura para plotar gráfico - dados
+        let dados = {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Quantidade de Votos",
+                    data: [],
+                    fill: false,
+                    backgroundColor: [
+                        "rgba(75, 192, 192, 0.2)",
+                        "rgba(255, 99, 132, 0.2)",
+                        "rgba(54, 162, 235, 0.2)",
+                    ],
+                    borderColor: [
+                        "rgba(75, 192, 192, 1)",
+                        "rgba(255, 99, 132, 1)",
+                        "rgba(54, 162, 235, 1)",
+                    ],
+                    borderWidth: 1,
+                    tension: 0.1,
+                },
+            ],
+        };
+
+        console.log("----------------------------------------------");
+        console.log(
+            'Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":'
         );
-      });
-  }
+        console.log(resposta);
+
+        // Inserindo valores recebidos em estrutura para plotar o gráfico 
+        // 
+
+
+        for (i = 0; i < resposta.length; i++) {
+            var registro = resposta[i];
+            dados.datasets[0].data.push(registro.hiroshima, registro.koyasan, registro.kyoto, registro.mtfuji, registro.nara);
+        }
+        const config = {
+            type: "bar",
+            data: dados,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "VOTAÇÃO",
+                        color: "#FFFFFF",
+                        font: {
+                            size: 20,
+                        },
+                    },
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: "white",
+                        },
+                    },
+                },
+            },
+        };
+
+        // Adicionando gráfico criado em div na tela
+        myChart = new Chart(document.getElementById("grafico_barra"), config);
+    }
+
+    function atualizarGrafico() {
+        fetch(`/votacao/ultimos`, { cache: "no-store" })
+            .then(function (resposta) {
+                if (resposta.ok) {
+                    resposta.json().then(function (respostaJSON) {
+                        console.log(`Dados recebidos: ${JSON.stringify(respostaJSON)}`);
+                        console.log(`Dados atuais do gráfico:`);
+                        console.log(myChart.data);
+
+                        myChart.data.datasets[0].data = [];
+
+                        for (let i = 0; i < respostaJSON.length; i++) {
+                            //   myChart.data.datasets[0].data.push(respostaJSON[i].quantidade);
+                            myChart.data.datasets[0].data.push(respostaJSON[i].hiroshima, respostaJSON[i].koyasan, respostaJSON[i].kyoto, respostaJSON[i].mtfuji, respostaJSON[i].nara);
+                        }
+
+                        myChart.update();
+                    });
+                } else {
+                    console.error("Nenhum dado encontrado ou erro na API");
+                }
+            })
+            .catch(function (error) {
+                console.error(
+                    `Erro na obtenção dos dados p/ gráfico: ${error.message}`
+                );
+            });
+    }
 
 </script>

@@ -13,7 +13,7 @@ function votar(req, res) {
 function obterVotosAtualizados(req, res) {
     console.log(`Buscando os votos...`);
   
-    votoModel.buscarVotos()                                     // invoca a função da model para buscar os votos
+    votacaoModel.buscarVotos()                                     // invoca a função da model para buscar os votos
       .then(function (resultado) {                              // ENTÃO, obtém o resultado após retornar a execução da query SQL na model
         if (resultado.length > 0) {                             // - verifica se obteve resultados
           console.log(resultado);                               // -- exibe no console o resultado obtido
@@ -28,8 +28,25 @@ function obterVotosAtualizados(req, res) {
         res.status(500).json(erro.sqlMessage);                             // retorna o status 500 (Erro) com a mensagem do erro ocorrido
       });
   }
+
+
+  function verificarVoto(req, res) {
+    var fk_usuario = req.params.fk_usuario;
+
+    console.log(fk_usuario);
+
+    votacaoModel.verificarVoto(fk_usuario).then((resultado) => {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).send("Nenhum voto encontrado!")
+        }
+    });
+}
+
   
 module.exports = {
     votar,
+    verificarVoto,
     obterVotosAtualizados
 };
