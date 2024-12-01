@@ -16,7 +16,9 @@ router.get("/buscarKpis/:idUsuarioServer", function (req, res) {
     quizController.buscarKpis(req, res);
 })
 
-
+router.get("/buscar5Melhores", function (req, res) {
+    quizController.buscar5Melhores(req, res);
+})
 
 
 module.exports = router;

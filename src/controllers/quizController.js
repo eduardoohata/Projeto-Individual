@@ -30,8 +30,15 @@ function buscarKpis(req, res) {
   });
 }
 
+function buscar5Melhores(req, res) {
+  quizModel.listar5Melhores().then((resultado) => {
+    res.status(200).json(resultado);
+  });
+}
+
 module.exports = {
   buscarPorUsuario,
   cadastrarPontos,
-  buscarKpis
+  buscarKpis,
+  buscar5Melhores
 };

@@ -34,7 +34,7 @@ body {
 
 .header {
   height: var(--tamanho-header);
-  border-bottom: 2px solid #9A031E;
+  border-bottom: 2px solid #BC002D;
 }
 
 .header .container {
@@ -45,7 +45,7 @@ body {
 
 .header a {
   text-decoration: none;
-  color: #9A031E;
+  color: #BC002D;
   font-size: 2vw;
   transition: 0.3s;
 }
@@ -62,7 +62,7 @@ font-weight: 800;
   justify-content: space-between;
   align-content: center;
   list-style: none;
-  color: #9A031E;
+  color: #BC002D;
 }
 
 .titulo {
@@ -140,7 +140,7 @@ font-weight: 800;
 /* FOOTER */
 
 .footer {
-  background-color: #9A031E;
+  background-color: #BC002D;
   height: 150px;
   color: #fff;
   display: flex;
@@ -177,7 +177,7 @@ font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  color: #9A031E;
+  color: #BC002D;
   flex-direction: column;
   height: fit-content;
   padding: 20px 0;
@@ -296,7 +296,7 @@ input {
   font-size: 18px;
   padding: 10px 15px;
   color: white;
-  background-color: #ED145B;
+  background-color: #BC002D;
   width: 120px;
   align-self: center;
   margin-top: 5px;
@@ -383,7 +383,7 @@ input {
   font-size: 35px;
   font-weight: 700;
   line-height: 42px;
-  color: #e74367;
+  color: #BC002D;
   position: relative;
   margin: 0;
   padding-bottom: 10px;
@@ -393,7 +393,7 @@ input {
   content: '';
   width: 253px;
   height: 3px;
-  background-color: #9A031E;
+  background-color: #BC002D;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -416,7 +416,7 @@ input {
   margin-left: 2vw;
   margin-top: 2vw;
   margin-bottom: 1vw;
-  color: #9A031E;
+  color: #BC002D;
 }
 
 .gallery-cards-grid {
@@ -595,7 +595,7 @@ h3 {
   line-height: 40px;
   margin-bottom: 40px;
   margin-top: 15px;
-  color: #9A031E;
+  color: #BC002D;
 }
 
 .linha-com-texto {
@@ -606,13 +606,13 @@ h3 {
 .linha {
   flex-grow: 1; /* Faz a linha ocupar o espaço restante */
   height: 1px; /* Altura da linha */
-  background-color: #9A031E; /* Cor da linha */
+  background-color: #BC002D; /* Cor da linha */
 }
 
 .texto {
   margin: 0 10px; /* Espaçamento ao redor do texto */
   white-space: nowrap; /* Impede que o texto quebre em várias linhas */
-  color: #9A031E;
+  color: #BC002D;
   font-size: 5vh;
   margin-bottom: 20px;
   font: bold, italic;
@@ -626,7 +626,7 @@ h3 {
   font-weight: 400;
   line-height: 24px;
   margin-bottom: 38px;
-  color: #9A031E;
+  color: #BC002D;
   font-weight: bold;
 }
 

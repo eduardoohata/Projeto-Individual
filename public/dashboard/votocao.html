@@ -24,12 +24,15 @@
 
 <body style="background-color: #161618;" onload='obterDadosGrafico()'>
 
-    <div class="janela">
+    <div class="janela votacao">
 
 
         <div class="header-left">
 
-            <h1>Conhecendo o Mundo</h1>
+            <img class="head-logo" src="../assets/imgs/kitsunemask.png">
+            <a href="../index.html"><b>
+                    <h1>Conhecendo o Mundo</h1>
+                </b></a>
 
             <div class="hello">
                 <h3>Olá, <span id="b_usuario">usuário</span>!</h3>
@@ -57,16 +60,18 @@
 
         </div>
 
-        <div class="botao_votar">
-            <button id="nara" class="cidade" onclick="votar('nara')">VOTAR!</button>
-            <button id="koyasan" class="cidade" onclick="votar('koyasan')">VOTAR!</button>
-            <button id="mtfuji" class="cidade" onclick="votar('mtfuji')">VOTAR!</button>
-            <button id="hiroshima" class="cidade" onclick="votar('hiroshima')">VOTAR!</button>
-            <button id="kyoto" class="cidade" onclick="votar('kyoto')">VOTAR!</button>
-        </div>
+        <div class="div-votacao">
+            <div class="botao_votar">
+                <button id="nara" class="cidade" onclick="votar('nara')">VOTAR!</button>
+                <button id="koyasan" class="cidade" onclick="votar('koyasan')">VOTAR!</button>
+                <button id="mtfuji" class="cidade" onclick="votar('mtfuji')">VOTAR!</button>
+                <button id="hiroshima" class="cidade" onclick="votar('hiroshima')">VOTAR!</button>
+                <button id="kyoto" class="cidade" onclick="votar('kyoto')">VOTAR!</button>
+            </div>
 
-        <div id="graficos">
-            <canvas id="grafico_barra" class="grafico"></canvas>
+            <div id="graficos">
+                <canvas id="grafico_barra" class="grafico"></canvas>
+            </div>
         </div>
 
 </body>
@@ -238,7 +243,7 @@
                     title: {
                         display: true,
                         text: "VOTAÇÃO",
-                        color: "#FFFFFF",
+                        color: "black",
                         font: {
                             size: 20,
                         },
@@ -246,7 +251,7 @@
                     legend: {
                         display: true,
                         labels: {
-                            color: "white",
+                            color: "black",
                         },
                     },
                 },

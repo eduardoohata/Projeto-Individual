@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conhecendo o Mundo | Dashboards</title>
 
-    
+
     <link rel="stylesheet" href="./../css/dashboards.css">
     <link rel="stylesheet" href="./../css/estilo.css" />
     <link rel="stylesheet" href="./../css/leader.css">
@@ -32,16 +32,18 @@
 <body onload="buscarKpi(), buscarResultadosPorUsuario()">
 
 
-  
+
 
 
     <div class="janela">
         <div class="header-left">
             <img class="head-logo" src="../assets/imgs/kitsunemask.png">
-           <a href="../index.html"><b><h1>Conhecendo o Mundo</h1></b></a>
+            <a href="../index.html"><b>
+                    <h1 class="tour-title">Conhecendo o Mundo (e a mim mesmo)</h1>
+                </b></a>
 
             <div class="hello">
-                <h3>Olá, <span id="b_usuario">usuário</span>!</h3>
+                <h3>Bem vindo, <span id="b_usuario">usuário</span>!</h3>
             </div>
 
             <div class="btn-nav-white">
@@ -72,15 +74,15 @@
             <div class="kpi-pai">
 
                 <div class="div-kpi div-acerto">
-                    <span>Quantidade de Acerto</span>
+                    <span><b>Quantidade total de acertos</b></span>
                     <span id="span_qtdAcerto">2</span>
                 </div>
                 <div class="div-kpi div-erro">
-                    <span>Quantidade de erro</span>
+                    <span><b>Quantidade de erros</b></span>
                     <span id="span_qtdErro">2</span>
                 </div>
                 <div class="div-kpi div-jogada">
-                    <span>Quantidade de vezes jogadas</span>
+                    <span><b>Quantidade de vezes jogadas</b></span>
                     <span id="span_qtdJogada">1</span>
                 </div>
             </div>
@@ -90,7 +92,7 @@
         </div>
     </div>
     <div class="leaderboard">
-        <h1>Leaderboard</h1>
+        <h1>Ranking do Quiz</h1>
         <table>
             <thead>
                 <tr>
@@ -99,32 +101,8 @@
                     <th>Pontos</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Jogador 1</td>
-                    <td>1500</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Jogador 2</td>
-                    <td>1400</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Jogador 3</td>
-                    <td>1300</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>Jogador 4</td>
-                    <td>1200</td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>Jogador 5</td>
-                    <td>1100</td>
-                </tr>
+            <tbody id="tbody_leaderboard">
+               
             </tbody>
         </table>
     </div>
@@ -134,59 +112,105 @@
 </html>
 
 <script>
+    buscar5Melhores()
     b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
 
 
     const ctx = document.getElementById('grafico_pizza');
-    
+
     var graficoLinha = new Chart(ctx, {
 
-    type: 'bar',
-    data: {
-        
-        datasets: [{
-        label: 'Quantidade de Acertos',
-        data: [],
-        borderWidth: 1
+        type: 'bar',
+        data: {
 
-        },{
-        label: 'Quantidade de Erros',
-        data: [],
-        borderWidth: 1
+            datasets: [{
+                label: 'Quantidade de Acertos',
+                data: [],
+                borderWidth: 1
 
-        }]
-    },
+            }, {
+                label: 'Quantidade de Erros',
+                data: [],
+                borderWidth: 1
 
-    options: {
-        plugins: {
-            legend: {
-                labels: {
-                    font: {
-                        weight: '800', // Torna o texto da legenda em negrito
-                        size: '20vw'
-                    }
-                }
-            }
+            }]
         },
-        scales: {
-            x: {
-                title: {
-                    display: true,
-                    text: 'Data e hora', // Título do eixo X
-                    font: {
-                        weight: 'bold', // Negrito no título do eixo X
-                        size: '20vw'
+
+        options: {
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            weight: '800', // Torna o texto da legenda em negrito
+                            size: '20vw'
+                        }
                     }
                 }
             },
-            y: {
-                beginAtZero: true
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Data e hora', // Título do eixo X
+                        font: {
+                            weight: 'bold', // Negrito no título do eixo X
+                            size: '20vw'
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: true
+                }
             }
         }
-    }
     });
 
-   function buscarResultadosPorUsuario() {
+    function buscar5Melhores() {
+        fetch(`/quiz/buscar5Melhores`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+
+        }).then(function (resposta) {
+            console.log("then de leaderboard!")
+
+            if (resposta.ok) {
+                // data vem no formato ISO london // T time 000z zona londres / criando nova data new date
+                // troca para pt be zona america sao paulo / put vem formato gmt br
+                resposta.json().then(valores => {
+                    console.log(valores[0].nome);
+                    console.log(valores[0].qtd_acertos)
+
+                    for (var i = 0; i < valores.length; i++) {
+                        tbody_leaderboard.innerHTML += 
+                        ` 
+                        <tr>
+                            <td>${i + 1} </td>
+                            <td>${valores[i].nome} </td>
+                            <td>${valores[i].qtd_acertos} </td>
+                        </tr>`
+                    }
+                });
+
+            } else {
+
+                console.log("Houve um erro ao trazer dados do Banco");
+
+                resposta.text().then(texto => {
+                    console.error(texto);
+                    finalizarAguardar(texto);
+                });
+            }
+
+        }).catch(function (erro) {
+            console.log(erro);
+        })
+
+        return false;
+    }
+
+    function buscarResultadosPorUsuario() {
         var idUsuario = sessionStorage.ID_USUARIO;
 
         fetch(`/quiz/buscar/${idUsuario}`, {
@@ -194,30 +218,30 @@
             headers: {
                 "Content-Type": "application/json"
             }
-            
+
         }).then(function (resposta) {
             console.log("ESTOU NO THEN DO cadastrarPontos()!")
 
             if (resposta.ok) {
-// data vem no formato ISO london // T time 000z zona londres / criando nova data new date
-// troca para pt be zona america sao paulo / put vem formato gmt br
+                // data vem no formato ISO london // T time 000z zona londres / criando nova data new date
+                // troca para pt be zona america sao paulo / put vem formato gmt br
                 resposta.json().then(valores => {
                     console.log(valores)
-                    valores.forEach((valor)=>{
-                        if (graficoLinha.data.labels.lenght == 10 && graficoLinha.data.datasets[0].data.lennght == 10){
+                    valores.forEach((valor) => {
+                        if (graficoLinha.data.labels.lenght == 10 && graficoLinha.data.datasets[0].data.lennght == 10) {
                             graficoLinha.data.labels.shift();
                             graficoLinha.data.datasets[0].data.shift();
                         }
 
                         var data_hora = new Date(valor.dt_hora);
-                        var data_horaBR = data_hora.toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"});
+                        var data_horaBR = data_hora.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
                         graficoLinha.data.labels.push(data_horaBR);
                         graficoLinha.data.datasets[0].data.push(parseFloat(valor.qtd_acertos));
                         graficoLinha.data.datasets[1].data.push(parseFloat(valor.qtd_erros));
                         graficoLinha.update();
-                    }); 
-                    
-                
+                    });
+
+
                 });
 
             } else {
@@ -245,7 +269,7 @@
             headers: {
                 "Content-Type": "application/json"
             }
-            
+
         }).then(function (resposta) {
             console.log("ESTOU NO THEN DO buscarKpis()!")
 
@@ -254,9 +278,9 @@
 
                 resposta.json().then(json => {
                     console.log(json);
-                span_qtdAcerto.innerHTML = json[0].QuantidadeDeAcertos
-                span_qtdErro.innerHTML = json[0].QuantidaDeErros
-                span_qtdJogada.innerHTML = json[0].QuantidadeDeJogadas
+                    span_qtdAcerto.innerHTML = json[0].QuantidadeDeAcertos
+                    span_qtdErro.innerHTML = json[0].QuantidaDeErros
+                    span_qtdJogada.innerHTML = json[0].QuantidadeDeJogadas
                 });
 
             } else {
