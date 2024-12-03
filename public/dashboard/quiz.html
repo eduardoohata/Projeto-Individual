@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exemplo - Quiz</title>
+    <title>Quiz</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 
@@ -68,7 +68,7 @@
             <br>
             <button class="button" onclick="avancar()" id="btnProx" disabled>Avançar para próxima questão</button>
             <br>
-            <!-- <button onclick="finalizarJogo()" id="btnConcluir">Finalizar Quiz</button> -->
+            <button onclick="finalizarJogo()" id="btnConcluir">Finalizar Quiz</button> <br>
             <button class="button" onclick="tentarNovamente()" id="btnTentarNovamente" disabled>Tentar
                 novamente</button>
             <a href="dashboard.html" class="a-button">Voltar para Dashboard</a>
@@ -92,7 +92,7 @@
         },
 
         {
-            pergunta: "Quantas horas tem em um Qual é o nome dos biscoitos especiais que são vendidos ao redor do Parque Nara e são seguros para alimentar os cervos selvagens da região?",
+            pergunta: "Qual é o nome dos biscoitos especiais que são vendidos ao redor do Parque Nara e são seguros para alimentar os cervos selvagens da região?",
             alternativaA: "Senbei japonês",
             alternativaB: "Shira Tensei",
             alternativaC: "Shika senbei",
@@ -315,11 +315,11 @@
         const porcentagemFinalDeAcertos = pontuacaoFinal / quantidadeDeQuestoes
 
         if (porcentagemFinalDeAcertos <= 0.3) {
-            textoParaMensagemFinal = "Parece que você não estudou..."
+            textoParaMensagemFinal = "Leia o site com atenção..."
             classComCoresParaMensagemFinal = "text-danger-with-bg"
         }
         else if (porcentagemFinalDeAcertos > 0.3 && porcentagemFinalDeAcertos < 0.9) {
-            textoParaMensagemFinal = "Pode melhorar na próxima, hein!"
+            textoParaMensagemFinal = "Não está ruim mas podem melhorar"
             classComCoresParaMensagemFinal = "text-warning-with-bg"
         }
         else if (porcentagemFinalDeAcertos >= 0.9) {

@@ -109,8 +109,8 @@ button {
 }
 
 .pontuacao {
+    
     border-radius: 50px;
-    background: #72be9a;
     padding: 8px;
     display: flex;
     flex-direction: column;
@@ -118,8 +118,13 @@ button {
     max-height: 350px;
     align-items: center;
     text-align: center; 
-    border: 3px solid #3b5661; 
+    border: 3px solid #bbcad0; 
     margin-bottom: 10px;
+    border-radius: 6px;
+    background: #e8dee0;
+    box-shadow:  26px 26px 52px #c3babc,
+             -26px -26px 52px #ffffff;
+
 }
 
 .pontuacao span {
@@ -141,7 +146,13 @@ button {
 }
 
 #jogo {
+
     margin-bottom: 10px;
+    border-radius: 6px;
+    background: #e8dee0;
+    box-shadow:  26px 26px 52px #c3babc,
+             
+
 }
 
 .header-left {

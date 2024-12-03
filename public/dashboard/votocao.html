@@ -2,7 +2,7 @@
 <html lang="pt-br">
 
 <head>
-    <link rel="shortcut icon" href="../assets/icon/favicon2.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="../assets/icon/kitsune.png" type="image/x-icon">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,14 +59,15 @@
             </div>
 
         </div>
-
+        <h1 class="tour-title">Vote na sua cidade favorita</h1>
         <div class="div-votacao">
             <div class="botao_votar">
-                <button id="nara" class="cidade" onclick="votar('nara')">VOTAR!</button>
-                <button id="koyasan" class="cidade" onclick="votar('koyasan')">VOTAR!</button>
-                <button id="mtfuji" class="cidade" onclick="votar('mtfuji')">VOTAR!</button>
-                <button id="hiroshima" class="cidade" onclick="votar('hiroshima')">VOTAR!</button>
-                <button id="kyoto" class="cidade" onclick="votar('kyoto')">VOTAR!</button>
+               
+                <button id="nara" class="cidade" onclick="votar('nara')">NARA</button>
+                <button id="koyasan" class="cidade" onclick="votar('koyasan')">KOYASAN</button>
+                <button id="mtfuji" class="cidade" onclick="votar('mtfuji')">MT.FUJI</button>
+                <button id="hiroshima" class="cidade" onclick="votar('hiroshima')">HIROSHIMA</button>
+                <button id="kyoto" class="cidade" onclick="votar('kyoto')">KYOTO</button>
             </div>
 
             <div id="graficos">
@@ -115,17 +116,23 @@
                             htmls[i].style.filter = 'grayscale(100%)';
                         }
                     }
+
                     atualizarGrafico();
+
                 } else {
+
                     console.error("Erro na votação ou jogo não encontrado");
                 }
             })
             .catch(function (error) {
+
                 console.error(`Erro ao realizar o voto: ${error.message}`);
+
             });
     }
 
     function votar(cidade) {
+
         var fk_usuario = sessionStorage.ID_USUARIO;
 
         console.log(fk_usuario);
@@ -136,24 +143,31 @@
                 headers: {
                     "Content-Type": "application/json"
                 },
+
                 body: JSON.stringify({
                     cidadeServer: cidade,
                     fk_usuarioServer: fk_usuario
                 })
+
             })
                 .then((response) => {
                     if (response.ok) {
                         console.log(`Voto contabilizado`);
                         atualizarGrafico();
                         verificarVoto();
+
                     } else {
+
                         console.error("Erro na votação ou jogo não encontrado");
                     }
                 })
                 .catch(function (error) {
+
                     console.error(`Erro ao realizar o voto: ${error.message}`);
                 });
+
         } else {
+            
             alert('Você já votou!')
         }
     }
